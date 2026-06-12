@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国旗クイズ - FLAG QUIZ</title>
+<meta name="description" content="世界197か国の国旗を当てる4択クイズゲーム。連続正解を伸ばして最高記録に挑戦しよう。">
+<meta property="og:title" content="国旗クイズ - FLAG QUIZ">
+<meta property="og:description" content="世界197か国の国旗を当てる4択クイズゲーム。連続正解を伸ばして最高記録に挑戦しよう。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e1226;
+    --paper: #f5efdd;
+    --accent: #ffd23f;
+    --ok: #2fbf71;
+    --ng: #ff5d5d;
+    --line: #07091a;
+    --shadow: rgba(4, 6, 20, 0.55);
+    --chip: #181d3a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    color: var(--paper);
+    background-color: var(--ink);
+    background-image: radial-gradient(rgba(245, 239, 221, 0.08) 1px, transparent 1.6px);
+    background-size: 22px 22px;
+    min-height: 100vh;
+  }
+
+  /* 周辺減光 */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(130% 95% at 50% 38%, transparent 55%, rgba(2, 3, 12, 0.65) 100%);
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 24px 16px 36px;
+  }
+
+  /* ---------- ヘッダー ---------- */
+  header { text-align: center; margin-bottom: 22px; }
+
+  .eyebrow {
+    font-family: "DotGothic16", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.45em;
+    text-indent: 0.45em;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-family: "DotGothic16", sans-serif;
+    font-weight: 400;
+    font-size: clamp(30px, 8vw, 38px);
+    letter-spacing: 0.08em;
+    color: var(--paper);
+    text-shadow: 4px 4px 0 var(--shadow);
+    margin-bottom: 16px;
+  }
+
+  .chips {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .chip {
+    background: var(--chip);
+    border: 3px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 4px 4px 0 var(--shadow);
+    padding: 7px 4px 6px;
+  }
+
+  .chip .label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: rgba(245, 239, 221, 0.62);
+  }
+
+  .chip .value {
+    display: block;
+    font-family: "DotGothic16", sans-serif;
+    font-size: 21px;
+    line-height: 1.15;
+    color: var(--accent);
+  }
+
+  /* ---------- 国旗カード ---------- */
+  .stage { position: relative; margin-top: 16px; }
+
+  .qno {
+    position: absolute;
+    top: -14px;
+    left: 14px;
+    z-index: 2;
+    font-family: "DotGothic16", sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--accent);
+    border: 3px solid var(--line);
+    border-radius: 8px;
+    padding: 3px 11px;
+    box-shadow: 3px 3px 0 var(--shadow);
+  }
+
+  .flag-card {
+    background: var(--paper);
+    border: 3px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 6px 6px 0 var(--shadow);
+    height: min(40vh, 230px);
+    padding: 24px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .flag-card img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 6px rgba(14, 18, 38, 0.28));
+  }
+
+  .pop { animation: pop 0.16s ease-out backwards; }
+
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .prompt {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin: 16px 0 14px;
+    color: rgba(245, 239, 221, 0.92);
+  }
+
+  /* ---------- 選択肢 ---------- */
+  .options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  @media (min-width: 520px) {
+    .options { grid-template-columns: 1fr 1fr; }
+  }
+
+  .opt {
+    position: relative;
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.35;
+    text-align: left;
+    color: var(--ink);
+    background: var(--paper);
+    border: 3px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 6px 6px 0 var(--shadow);
+    min-height: 56px;
+    padding: 10px 14px 10px 46px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+    animation: rise 0.07s ease-out backwards;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(9px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (hover: hover) {
+    .options:not(.locked) .opt:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 var(--shadow);
+      background: #fff8e2;
+    }
+  }
+
+  .options:not(.locked) .opt:active {
+    transform: translate(3px, 3px);
+    box-shadow: 3px 3px 0 var(--shadow);
+  }
+
+  .opt .key {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "DotGothic16", sans-serif;
+    font-size: 12px;
+    color: var(--accent);
+    background: var(--ink);
+    border-radius: 6px;
+  }
+
+  .options.locked .opt { cursor: default; }
+
+  .opt.correct {
+    background: var(--ok) !important;
+    border-color: #14663b;
+    color: #fff;
+  }
+
+  .opt.wrong {
+    background: var(--ng) !important;
+    border-color: #8e2424;
+    color: #fff;
+    animation: shake 0.4s ease both;
+  }
+
+  .opt.dim { opacity: 0.55; }
+
+  @keyframes shake {
+    10%, 90% { transform: translateX(-2px); }
+    20%, 80% { transform: translateX(4px); }
+    30%, 50%, 70% { transform: translateX(-6px); }
+    40%, 60% { transform: translateX(6px); }
+  }
+
+  footer {
+    margin-top: 28px;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: rgba(245, 239, 221, 0.45);
+  }
+
+  .load-error {
+    font-weight: 700;
+    color: var(--ink);
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .load-error .retry {
+    margin-top: 10px;
+    padding: 8px 18px;
+    font: 700 14px "Zen Kaku Gothic New", sans-serif;
+    color: var(--ink);
+    background: var(--accent);
+    border: 3px solid var(--ink);
+    border-radius: 10px;
+    box-shadow: 3px 3px 0 var(--ink);
+    cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">FLAG QUIZ</p>
+    <h1>国旗クイズ</h1>
+    <div class="chips" aria-label="スコア">
+      <div class="chip"><span class="label">正解</span><span class="value" id="stat-correct">0</span></div>
+      <div class="chip"><span class="label">連続</span><span class="value" id="stat-streak">0</span></div>
+      <div class="chip"><span class="label">最高</span><span class="value" id="stat-best">0</span></div>
+      <div class="chip"><span class="label">正答率</span><span class="value" id="stat-acc">0%</span></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="stage">
+      <div class="qno" id="qno">第1問</div>
+      <div class="flag-card" id="flag-card"></div>
+    </div>
+    <p class="prompt">この国旗はどこの国？</p>
+    <div class="options" id="options"></div>
+  </main>
+
+  <footer>国旗画像: flagcdn.com</footer>
+</div>
+
+<script src="countries.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var flagCard = document.getElementById("flag-card");
+  var optionsEl = document.getElementById("options");
+  var qnoEl = document.getElementById("qno");
+  var statCorrect = document.getElementById("stat-correct");
+  var statStreak = document.getElementById("stat-streak");
+  var statBest = document.getElementById("stat-best");
+  var statAcc = document.getElementById("stat-acc");
+
+  if (!window.COUNTRIES || !Array.isArray(window.COUNTRIES) || window.COUNTRIES.length < 4) {
+    flagCard.innerHTML = '<p class="load-error">countries.js が読み込めませんでした。<br>ファイルを確認してください。</p>';
+    return;
+  }
+
+  var ALL = window.COUNTRIES;
+  var BEST_KEY = "flagquiz-best";
+
+  // localStorage が使えない環境(全Cookieブロック・一部WebView等)でも止めない
+  function loadBest() {
+    try { return parseInt(localStorage.getItem(BEST_KEY), 10) || 0; } catch (e) { return 0; }
+  }
+  function saveBest(v) {
+    try { localStorage.setItem(BEST_KEY, String(v)); } catch (e) {}
+  }
+
+  var deck = [];
+  var qNo = 0;
+  var correct = 0;
+  var answered = 0;
+  var streak = 0;
+  var best = loadBest();
+  var failStreak = 0;
+  var locked = false;
+  var timer = null;
+  var token = 0;
+  var current = null;
+  var nextQ = null;
+
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function draw() {
+    if (deck.length === 0) {
+      deck = shuffle(ALL.slice());
+      // 再シャッフル直後に表示中の国が再度出て2問連続にならないようにする
+      if (current && deck[deck.length - 1][0] === current.ans[0]) {
+        var t = deck[deck.length - 1];
+        deck[deck.length - 1] = deck[0];
+        deck[0] = t;
+      }
+    }
+    return deck.pop();
+  }
+
+  function makeQuestion() {
+    var ans = draw();
+    var same = shuffle(ALL.filter(function (c) {
+      return c[2] === ans[2] && c[0] !== ans[0];
+    }));
+    var opts = [ans].concat(same.slice(0, 3));
+    if (opts.length < 4) {
+      var used = {};
+      opts.forEach(function (c) { used[c[0]] = true; });
+      var rest = shuffle(ALL.filter(function (c) { return !used[c[0]]; }));
+      while (opts.length < 4 && rest.length) opts.push(rest.pop());
+    }
+    return { ans: ans, opts: shuffle(opts) };
+  }
+
+  function flagSrc(code) { return "https://flagcdn.com/w320/" + code + ".png"; }
+  function flagSrcset(code) { return "https://flagcdn.com/w640/" + code + ".png 2x"; }
+
+  function preload(q) {
+    var im = new Image();
+    im.srcset = flagSrcset(q.ans[0]);
+    im.src = flagSrc(q.ans[0]);
+  }
+
+  function updateStats() {
+    statCorrect.textContent = correct;
+    statStreak.textContent = streak;
+    statBest.textContent = best;
+    statAcc.textContent = (answered ? Math.round(correct / answered * 100) : 0) + "%";
+  }
+
+  function render(isRetry) {
+    token++;
+    var myToken = token;
+    locked = false;
+    if (!isRetry) qNo++;
+    qnoEl.textContent = "第" + qNo + "問";
+    optionsEl.classList.remove("locked");
+
+    var img = document.createElement("img");
+    img.alt = "国旗";
+    img.decoding = "async";
+    img.className = "pop";
+    img.onload = function () { failStreak = 0; };
+    img.onerror = function () {
+      // 画像が読めない問題はスキップして次へ。連続失敗時はループせず停止する
+      if (myToken !== token || locked) return;
+      failStreak++;
+      if (failStreak >= 3) {
+        locked = true;
+        optionsEl.classList.add("locked");
+        flagCard.innerHTML = '<p class="load-error">画像を読み込めません。<br>通信環境を確認してください。<br><button type="button" class="retry">再試行</button></p>';
+        flagCard.querySelector(".retry").addEventListener("click", function () {
+          failStreak = 0;
+          render(true);
+        });
+        return;
+      }
+      locked = true;
+      goNext();
+    };
+    img.srcset = flagSrcset(current.ans[0]);
+    img.src = flagSrc(current.ans[0]);
+    flagCard.innerHTML = "";
+    flagCard.appendChild(img);
+
+    optionsEl.innerHTML = "";
+    current.opts.forEach(function (c, i) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "opt";
+      btn.style.animationDelay = (i * 60) + "ms";
+      var key = document.createElement("span");
+      key.className = "key";
+      key.textContent = i + 1;
+      btn.appendChild(key);
+      btn.appendChild(document.createTextNode(c[1]));
+      btn.addEventListener("click", function () { answer(i); });
+      optionsEl.appendChild(btn);
+    });
+  }
+
+  function answer(i) {
+    if (locked) return;
+    locked = true;
+    optionsEl.classList.add("locked");
+    answered++;
+
+    var buttons = optionsEl.children;
+    var pick = current.opts[i];
+    var isCorrect = pick[0] === current.ans[0];
+    var delay;
+
+    if (isCorrect) {
+      buttons[i].classList.add("correct");
+      correct++;
+      streak++;
+      if (streak > best) {
+        best = streak;
+        saveBest(best);
+      }
+      delay = 700;
+    } else {
+      buttons[i].classList.add("wrong");
+      for (var k = 0; k < buttons.length; k++) {
+        if (current.opts[k][0] === current.ans[0]) {
+          buttons[k].classList.add("correct");
+        } else if (k !== i) {
+          buttons[k].classList.add("dim");
+        }
+      }
+      streak = 0;
+      delay = 1400;
+    }
+
+    updateStats();
+    clearTimeout(timer);
+    timer = setTimeout(goNext, delay);
+  }
+
+  function goNext() {
+    clearTimeout(timer);
+    current = nextQ;
+    nextQ = makeQuestion();
+    preload(nextQ);
+    render();
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.repeat) return;
+    var n = parseInt(e.key, 10);
+    if (n >= 1 && n <= 4) {
+      var btn = optionsEl.children[n - 1];
+      if (btn) btn.click();
+    }
+  });
+
+  // 初期化
+  updateStats();
+  current = makeQuestion();
+  nextQ = makeQuestion();
+  preload(nextQ);
+  render();
+})();
+</script>
+</body>
+</html>
