@@ -321,6 +321,36 @@
     box-shadow: 3px 3px 0 var(--shadow);
   }
 
+  .quit-btn {
+    position: absolute;
+    top: -14px;
+    right: 14px;
+    z-index: 2;
+    font-family: "DotGothic16", sans-serif;
+    font-size: 13px;
+    color: var(--paper);
+    background: var(--chip);
+    border: 3px solid var(--line);
+    border-radius: 8px;
+    padding: 3px 11px;
+    box-shadow: 3px 3px 0 var(--shadow);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+  }
+
+  @media (hover: hover) {
+    .quit-btn:hover {
+      background: #232a52;
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 var(--shadow);
+    }
+  }
+
+  .quit-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--shadow);
+  }
+
   .flag-card {
     background: var(--paper);
     border: 3px solid var(--line);
@@ -531,6 +561,7 @@
       </div>
       <div class="stage">
         <div class="qno" id="qno">1 / 10</div>
+        <button type="button" class="quit-btn" id="btn-quit">トップへ</button>
         <div class="flag-card" id="flag-card"></div>
       </div>
       <p class="prompt">この国旗はどこの国？</p>
@@ -569,6 +600,7 @@
   var btnStart = document.getElementById("btn-start");
   var btnAgain = document.getElementById("btn-again");
   var btnSelect = document.getElementById("btn-select");
+  var btnQuit = document.getElementById("btn-quit");
   var flagCard = document.getElementById("flag-card");
   var optionsEl = document.getElementById("options");
   var qnoEl = document.getElementById("qno");
@@ -738,6 +770,7 @@
     btnStart.addEventListener("click", function () { startRound(); });
     btnAgain.addEventListener("click", function () { startRound(); });
     btnSelect.addEventListener("click", function () { showStart(); });
+    btnQuit.addEventListener("click", function () { showStart(); });
   }
 
   function showStart() {
