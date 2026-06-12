@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>国旗クイズ - FLAG QUIZ</title>
-<meta name="description" content="世界197か国の国旗を当てる4択クイズゲーム。連続正解を伸ばして最高記録に挑戦しよう。">
-<meta property="og:title" content="国旗クイズ - FLAG QUIZ">
-<meta property="og:description" content="世界197か国の国旗を当てる4択クイズゲーム。連続正解を伸ばして最高記録に挑戦しよう。">
+<title>国旗クイズ - FLAG QUIZ | 地域別・8択・首都つき</title>
+<meta name="description" content="世界197か国の国旗を当てる8択クイズ。アジア・ヨーロッパ・アフリカ・北中米・南米・オセアニアの地域別モードと10問/15問ラウンド制。選択肢には首都つきで、連続正解のベスト記録に挑戦しよう。">
+<meta property="og:title" content="国旗クイズ - FLAG QUIZ | 地域別・8択・首都つき">
+<meta property="og:description" content="世界197か国の国旗を当てる8択クイズ。地域別モード×10問/15問ラウンド制、選択肢には首都つき。連続正解のベスト記録に挑戦しよう。">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,7 +55,7 @@
   }
 
   /* ---------- ヘッダー ---------- */
-  header { text-align: center; margin-bottom: 22px; }
+  header { text-align: center; margin-bottom: 18px; }
 
   .eyebrow {
     font-family: "DotGothic16", sans-serif;
@@ -73,13 +73,15 @@
     letter-spacing: 0.08em;
     color: var(--paper);
     text-shadow: 4px 4px 0 var(--shadow);
-    margin-bottom: 16px;
   }
+
+  .hidden { display: none !important; }
 
   .chips {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 8px;
+    margin-bottom: 4px;
   }
 
   .chip {
@@ -88,6 +90,7 @@
     border-radius: 10px;
     box-shadow: 4px 4px 0 var(--shadow);
     padding: 7px 4px 6px;
+    text-align: center;
   }
 
   .chip .label {
@@ -105,6 +108,200 @@
     line-height: 1.15;
     color: var(--accent);
   }
+
+  /* ---------- パネル(スタート/リザルト共通の筐体) ---------- */
+  .panel {
+    background: var(--chip);
+    border: 3px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 6px 6px 0 var(--shadow);
+    padding: 18px 16px 20px;
+  }
+
+  .panel-label {
+    font-family: "DotGothic16", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-indent: 0.2em;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  /* ---------- スタート画面 ---------- */
+  .region-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .region-btn {
+    grid-column: auto;
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    text-align: center;
+    color: var(--ink);
+    background: var(--paper);
+    border: 3px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 4px 4px 0 var(--shadow);
+    min-height: 52px;
+    padding: 8px 6px;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+  }
+
+  .region-btn.full { grid-column: 1 / -1; }
+
+  .region-btn .r-name {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .region-btn .r-count {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(14, 18, 38, 0.6);
+  }
+
+  .region-btn.sel {
+    background: var(--accent);
+    box-shadow: 2px 2px 0 var(--shadow);
+    transform: translate(2px, 2px);
+  }
+
+  .region-btn.sel .r-count { color: rgba(14, 18, 38, 0.7); }
+
+  @media (hover: hover) {
+    .region-btn:not(.sel):hover,
+    .count-btn:not(.sel):hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--shadow);
+      background: #fff8e2;
+    }
+  }
+
+  .count-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .count-btn {
+    font-family: "DotGothic16", sans-serif;
+    font-size: 17px;
+    text-align: center;
+    color: var(--ink);
+    background: var(--paper);
+    border: 3px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 4px 4px 0 var(--shadow);
+    min-height: 48px;
+    padding: 8px 6px;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+  }
+
+  .count-btn.sel {
+    background: var(--accent);
+    box-shadow: 2px 2px 0 var(--shadow);
+    transform: translate(2px, 2px);
+  }
+
+  .big-btn {
+    display: block;
+    width: 100%;
+    font-family: "DotGothic16", sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.18em;
+    text-indent: 0.18em;
+    color: var(--ink);
+    background: var(--accent);
+    border: 3px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 6px 6px 0 var(--shadow);
+    min-height: 58px;
+    padding: 12px;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  @media (hover: hover) {
+    .big-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 var(--shadow);
+    }
+  }
+
+  .big-btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 3px 3px 0 var(--shadow);
+  }
+
+  .big-btn.ghost {
+    color: var(--paper);
+    background: var(--chip);
+  }
+
+  /* ---------- リザルト画面 ---------- */
+  .result-main {
+    font-family: "DotGothic16", sans-serif;
+    font-size: clamp(24px, 7vw, 32px);
+    text-align: center;
+    color: var(--paper);
+    text-shadow: 3px 3px 0 var(--shadow);
+    margin: 8px 0 4px;
+  }
+
+  .result-main .num { color: var(--accent); }
+
+  .result-acc {
+    font-family: "DotGothic16", sans-serif;
+    font-size: 18px;
+    text-align: center;
+    color: rgba(245, 239, 221, 0.85);
+    margin-bottom: 16px;
+  }
+
+  .result-rows { margin-bottom: 18px; }
+
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--ink);
+    border: 3px solid var(--line);
+    border-radius: 10px;
+    padding: 9px 14px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .result-row .v {
+    font-family: "DotGothic16", sans-serif;
+    font-size: 19px;
+    color: var(--accent);
+  }
+
+  .new-best {
+    display: inline-block;
+    font-family: "DotGothic16", sans-serif;
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--ok);
+    border: 2px solid var(--line);
+    border-radius: 6px;
+    padding: 2px 8px;
+    margin-right: 8px;
+    animation: pop 0.3s ease-out backwards;
+  }
+
+  .result-btns { display: grid; gap: 12px; }
 
   /* ---------- 国旗カード ---------- */
   .stage { position: relative; margin-top: 16px; }
@@ -129,7 +326,7 @@
     border: 3px solid var(--line);
     border-radius: 14px;
     box-shadow: 6px 6px 0 var(--shadow);
-    height: min(40vh, 230px);
+    height: min(34vh, 210px);
     padding: 24px 20px;
     display: flex;
     align-items: center;
@@ -153,43 +350,44 @@
 
   .prompt {
     text-align: center;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     letter-spacing: 0.06em;
-    margin: 16px 0 14px;
+    margin: 14px 0 12px;
     color: rgba(245, 239, 221, 0.92);
   }
 
-  /* ---------- 選択肢 ---------- */
+  /* ---------- 選択肢(8択・常時2列) ---------- */
   .options {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  @media (min-width: 520px) {
-    .options { grid-template-columns: 1fr 1fr; }
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
 
   .opt {
     position: relative;
     font-family: "Zen Kaku Gothic New", sans-serif;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 700;
-    line-height: 1.35;
+    line-height: 1.3;
     text-align: left;
     color: var(--ink);
     background: var(--paper);
     border: 3px solid var(--line);
-    border-radius: 12px;
-    box-shadow: 6px 6px 0 var(--shadow);
-    min-height: 56px;
-    padding: 10px 14px 10px 46px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 0 var(--shadow);
+    min-height: 48px;
+    padding: 7px 8px 7px 32px;
     display: flex;
     align-items: center;
     cursor: pointer;
     transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
     animation: rise 0.07s ease-out backwards;
+  }
+
+  @media (min-width: 480px) {
+    .options { gap: 10px; }
+    .opt { font-size: 14px; padding-left: 36px; }
   }
 
   @keyframes rise {
@@ -200,31 +398,47 @@
   @media (hover: hover) {
     .options:not(.locked) .opt:hover {
       transform: translate(-2px, -2px);
-      box-shadow: 8px 8px 0 var(--shadow);
+      box-shadow: 6px 6px 0 var(--shadow);
       background: #fff8e2;
     }
   }
 
   .options:not(.locked) .opt:active {
     transform: translate(3px, 3px);
-    box-shadow: 3px 3px 0 var(--shadow);
+    box-shadow: 2px 2px 0 var(--shadow);
   }
 
   .opt .key {
     position: absolute;
-    left: 12px;
+    left: 7px;
     top: 50%;
     transform: translateY(-50%);
-    width: 22px;
-    height: 22px;
+    width: 19px;
+    height: 19px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: "DotGothic16", sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--accent);
     background: var(--ink);
-    border-radius: 6px;
+    border-radius: 5px;
+  }
+
+  .opt .txt {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .opt .cap {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(14, 18, 38, 0.58);
+  }
+
+  @media (min-width: 480px) {
+    .opt .cap { font-size: 12px; }
   }
 
   .options.locked .opt { cursor: default; }
@@ -235,12 +449,16 @@
     color: #fff;
   }
 
+  .opt.correct .cap { color: rgba(255, 255, 255, 0.78); }
+
   .opt.wrong {
     background: var(--ng) !important;
     border-color: #8e2424;
     color: #fff;
     animation: shake 0.4s ease both;
   }
+
+  .opt.wrong .cap { color: rgba(255, 255, 255, 0.78); }
 
   .opt.dim { opacity: 0.55; }
 
@@ -291,21 +509,48 @@
   <header>
     <p class="eyebrow">FLAG QUIZ</p>
     <h1>国旗クイズ</h1>
-    <div class="chips" aria-label="スコア">
-      <div class="chip"><span class="label">正解</span><span class="value" id="stat-correct">0</span></div>
-      <div class="chip"><span class="label">連続</span><span class="value" id="stat-streak">0</span></div>
-      <div class="chip"><span class="label">最高</span><span class="value" id="stat-best">0</span></div>
-      <div class="chip"><span class="label">正答率</span><span class="value" id="stat-acc">0%</span></div>
-    </div>
   </header>
 
   <main>
-    <div class="stage">
-      <div class="qno" id="qno">第1問</div>
-      <div class="flag-card" id="flag-card"></div>
-    </div>
-    <p class="prompt">この国旗はどこの国？</p>
-    <div class="options" id="options"></div>
+    <!-- スタート画面 -->
+    <section id="screen-start" class="panel hidden">
+      <p class="panel-label">エリアをえらぶ</p>
+      <div class="region-grid" id="region-grid"></div>
+      <p class="panel-label">もんだい数</p>
+      <div class="count-row" id="count-row"></div>
+      <button type="button" class="big-btn" id="btn-start">スタート</button>
+    </section>
+
+    <!-- クイズ画面 -->
+    <section id="screen-quiz" class="hidden">
+      <div class="chips" aria-label="スコア">
+        <div class="chip"><span class="label">正解</span><span class="value" id="stat-correct">0</span></div>
+        <div class="chip"><span class="label">連続</span><span class="value" id="stat-streak">0</span></div>
+        <div class="chip"><span class="label">最高</span><span class="value" id="stat-best">0</span></div>
+        <div class="chip"><span class="label">正答率</span><span class="value" id="stat-acc">0%</span></div>
+      </div>
+      <div class="stage">
+        <div class="qno" id="qno">1 / 10</div>
+        <div class="flag-card" id="flag-card"></div>
+      </div>
+      <p class="prompt">この国旗はどこの国？</p>
+      <div class="options" id="options"></div>
+    </section>
+
+    <!-- リザルト画面 -->
+    <section id="screen-result" class="panel hidden">
+      <p class="panel-label">けっか はっぴょう</p>
+      <p class="result-main" id="result-main"></p>
+      <p class="result-acc" id="result-acc"></p>
+      <div class="result-rows">
+        <div class="result-row"><span>今回の最高連続</span><span class="v" id="result-streak">0</span></div>
+        <div class="result-row"><span>ベスト連続(全期間)</span><span><span class="new-best hidden" id="result-newbest">ベスト更新!</span><span class="v" id="result-best">0</span></span></div>
+      </div>
+      <div class="result-btns">
+        <button type="button" class="big-btn" id="btn-again">もういちど</button>
+        <button type="button" class="big-btn ghost" id="btn-select">エリアをえらぶ</button>
+      </div>
+    </section>
   </main>
 
   <footer>国旗画像: flagcdn.com</footer>
@@ -316,6 +561,14 @@
 (function () {
   "use strict";
 
+  var screenStart = document.getElementById("screen-start");
+  var screenQuiz = document.getElementById("screen-quiz");
+  var screenResult = document.getElementById("screen-result");
+  var regionGrid = document.getElementById("region-grid");
+  var countRow = document.getElementById("count-row");
+  var btnStart = document.getElementById("btn-start");
+  var btnAgain = document.getElementById("btn-again");
+  var btnSelect = document.getElementById("btn-select");
   var flagCard = document.getElementById("flag-card");
   var optionsEl = document.getElementById("options");
   var qnoEl = document.getElementById("qno");
@@ -323,14 +576,33 @@
   var statStreak = document.getElementById("stat-streak");
   var statBest = document.getElementById("stat-best");
   var statAcc = document.getElementById("stat-acc");
+  var resultMain = document.getElementById("result-main");
+  var resultAcc = document.getElementById("result-acc");
+  var resultStreak = document.getElementById("result-streak");
+  var resultBest = document.getElementById("result-best");
+  var resultNewBest = document.getElementById("result-newbest");
 
-  if (!window.COUNTRIES || !Array.isArray(window.COUNTRIES) || window.COUNTRIES.length < 4) {
+  if (!window.COUNTRIES || !Array.isArray(window.COUNTRIES) || window.COUNTRIES.length < 8) {
+    screenStart.classList.add("hidden");
+    screenQuiz.classList.remove("hidden");
     flagCard.innerHTML = '<p class="load-error">countries.js が読み込めませんでした。<br>ファイルを確認してください。</p>';
     return;
   }
 
   var ALL = window.COUNTRIES;
   var BEST_KEY = "flagquiz-best";
+  var OPT_COUNT = 8;
+
+  var REGIONS = [
+    { key: "all", label: "ぜんぶ", name: null },
+    { key: "asia", label: "アジア", name: "アジア" },
+    { key: "europe", label: "ヨーロッパ", name: "ヨーロッパ" },
+    { key: "africa", label: "アフリカ", name: "アフリカ" },
+    { key: "namerica", label: "北中米", name: "北中米" },
+    { key: "samerica", label: "南米", name: "南米" },
+    { key: "oceania", label: "オセアニア", name: "オセアニア" }
+  ];
+  var COUNTS = [10, 15];
 
   // localStorage が使えない環境(全Cookieブロック・一部WebView等)でも止めない
   function loadBest() {
@@ -340,12 +612,17 @@
     try { localStorage.setItem(BEST_KEY, String(v)); } catch (e) {}
   }
 
-  var deck = [];
-  var qNo = 0;
+  var selRegion = "all";
+  var selCount = 10;
+
+  var roundDeck = [];
+  var qIndex = 0;
   var correct = 0;
   var answered = 0;
   var streak = 0;
+  var roundMaxStreak = 0;
   var best = loadBest();
+  var bestAtStart = best;
   var failStreak = 0;
   var locked = false;
   var timer = null;
@@ -361,30 +638,28 @@
     return a;
   }
 
-  function draw() {
-    if (deck.length === 0) {
-      deck = shuffle(ALL.slice());
-      // 再シャッフル直後に表示中の国が再度出て2問連続にならないようにする
-      if (current && deck[deck.length - 1][0] === current.ans[0]) {
-        var t = deck[deck.length - 1];
-        deck[deck.length - 1] = deck[0];
-        deck[0] = t;
+  function regionPool(key) {
+    for (var i = 0; i < REGIONS.length; i++) {
+      if (REGIONS[i].key === key) {
+        if (!REGIONS[i].name) return ALL.slice();
+        var name = REGIONS[i].name;
+        return ALL.filter(function (c) { return c[2] === name; });
       }
     }
-    return deck.pop();
+    return ALL.slice();
   }
 
-  function makeQuestion() {
-    var ans = draw();
+  // 正解 + 同じ地域から7か国(足りない時のみ全体から補充)で8択を作る
+  function makeQuestion(ans) {
     var same = shuffle(ALL.filter(function (c) {
       return c[2] === ans[2] && c[0] !== ans[0];
     }));
-    var opts = [ans].concat(same.slice(0, 3));
-    if (opts.length < 4) {
+    var opts = [ans].concat(same.slice(0, OPT_COUNT - 1));
+    if (opts.length < OPT_COUNT) {
       var used = {};
       opts.forEach(function (c) { used[c[0]] = true; });
       var rest = shuffle(ALL.filter(function (c) { return !used[c[0]]; }));
-      while (opts.length < 4 && rest.length) opts.push(rest.pop());
+      while (opts.length < OPT_COUNT && rest.length) opts.push(rest.pop());
     }
     return { ans: ans, opts: shuffle(opts) };
   }
@@ -405,12 +680,101 @@
     statAcc.textContent = (answered ? Math.round(correct / answered * 100) : 0) + "%";
   }
 
+  function showScreen(el) {
+    screenStart.classList.add("hidden");
+    screenQuiz.classList.add("hidden");
+    screenResult.classList.add("hidden");
+    el.classList.remove("hidden");
+  }
+
+  /* ---------- スタート画面 ---------- */
+
+  function refreshStartUI() {
+    var i, btns;
+    btns = regionGrid.children;
+    for (i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle("sel", btns[i].dataset.key === selRegion);
+    }
+    btns = countRow.children;
+    for (i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle("sel", parseInt(btns[i].dataset.n, 10) === selCount);
+    }
+  }
+
+  function buildStartUI() {
+    REGIONS.forEach(function (r) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "region-btn" + (r.key === "all" ? " full" : "");
+      btn.dataset.key = r.key;
+      var name = document.createElement("span");
+      name.className = "r-name";
+      name.textContent = r.label;
+      var count = document.createElement("span");
+      count.className = "r-count";
+      count.textContent = regionPool(r.key).length + "か国";
+      btn.appendChild(name);
+      btn.appendChild(count);
+      btn.addEventListener("click", function () {
+        selRegion = r.key;
+        refreshStartUI();
+      });
+      regionGrid.appendChild(btn);
+    });
+
+    COUNTS.forEach(function (n) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "count-btn";
+      btn.dataset.n = n;
+      btn.textContent = n + "問";
+      btn.addEventListener("click", function () {
+        selCount = n;
+        refreshStartUI();
+      });
+      countRow.appendChild(btn);
+    });
+
+    btnStart.addEventListener("click", function () { startRound(); });
+    btnAgain.addEventListener("click", function () { startRound(); });
+    btnSelect.addEventListener("click", function () { showStart(); });
+  }
+
+  function showStart() {
+    clearTimeout(timer);
+    timer = null;
+    token++;
+    refreshStartUI();
+    showScreen(screenStart);
+  }
+
+  /* ---------- ラウンド ---------- */
+
+  function startRound() {
+    clearTimeout(timer);
+    timer = null;
+    failStreak = 0;
+    var pool = regionPool(selRegion);
+    roundDeck = shuffle(pool.slice()).slice(0, Math.min(selCount, pool.length));
+    qIndex = 0;
+    correct = 0;
+    answered = 0;
+    streak = 0;
+    roundMaxStreak = 0;
+    bestAtStart = best;
+    current = makeQuestion(roundDeck[0]);
+    nextQ = roundDeck.length > 1 ? makeQuestion(roundDeck[1]) : null;
+    if (nextQ) preload(nextQ);
+    updateStats();
+    showScreen(screenQuiz);
+    render(false);
+  }
+
   function render(isRetry) {
     token++;
     var myToken = token;
     locked = false;
-    if (!isRetry) qNo++;
-    qnoEl.textContent = "第" + qNo + "問";
+    qnoEl.textContent = (qIndex + 1) + " / " + roundDeck.length;
     optionsEl.classList.remove("locked");
 
     var img = document.createElement("img");
@@ -445,12 +809,21 @@
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "opt";
-      btn.style.animationDelay = (i * 60) + "ms";
+      btn.style.animationDelay = (i * 45) + "ms";
       var key = document.createElement("span");
       key.className = "key";
       key.textContent = i + 1;
       btn.appendChild(key);
-      btn.appendChild(document.createTextNode(c[1]));
+      var txt = document.createElement("span");
+      txt.className = "txt";
+      txt.appendChild(document.createTextNode(c[1]));
+      if (c[3]) {
+        var cap = document.createElement("span");
+        cap.className = "cap";
+        cap.textContent = "（" + c[3] + "）";
+        txt.appendChild(cap);
+      }
+      btn.appendChild(txt);
       btn.addEventListener("click", function () { answer(i); });
       optionsEl.appendChild(btn);
     });
@@ -471,6 +844,7 @@
       buttons[i].classList.add("correct");
       correct++;
       streak++;
+      if (streak > roundMaxStreak) roundMaxStreak = streak;
       if (streak > best) {
         best = streak;
         saveBest(best);
@@ -496,27 +870,73 @@
 
   function goNext() {
     clearTimeout(timer);
-    current = nextQ;
-    nextQ = makeQuestion();
-    preload(nextQ);
-    render();
+    timer = null;
+    qIndex++;
+    if (qIndex >= roundDeck.length) {
+      showResult();
+      return;
+    }
+    current = nextQ || makeQuestion(roundDeck[qIndex]);
+    nextQ = qIndex + 1 < roundDeck.length ? makeQuestion(roundDeck[qIndex + 1]) : null;
+    if (nextQ) preload(nextQ);
+    render(false);
   }
+
+  /* ---------- リザルト ---------- */
+
+  function showResult() {
+    clearTimeout(timer);
+    timer = null;
+    token++;
+    failStreak = 0;
+    resultMain.innerHTML = "";
+    // 画像エラーでスキップした問題は母数に含めない(answered と整合させる)
+    resultMain.appendChild(document.createTextNode(answered + "問中 "));
+    var num = document.createElement("span");
+    num.className = "num";
+    num.textContent = correct + "問";
+    resultMain.appendChild(num);
+    resultMain.appendChild(document.createTextNode("正解"));
+    resultAcc.textContent = "正答率 " + (answered ? Math.round(correct / answered * 100) : 0) + "%";
+    resultStreak.textContent = roundMaxStreak;
+    resultBest.textContent = best;
+    resultNewBest.classList.toggle("hidden", !(best > bestAtStart));
+    showScreen(screenResult);
+  }
+
+  /* ---------- キーボード 1〜8 ---------- */
 
   document.addEventListener("keydown", function (e) {
     if (e.repeat) return;
+    if (screenQuiz.classList.contains("hidden")) return;
     var n = parseInt(e.key, 10);
-    if (n >= 1 && n <= 4) {
+    if (n >= 1 && n <= OPT_COUNT) {
       var btn = optionsEl.children[n - 1];
       if (btn) btn.click();
     }
   });
 
-  // 初期化
-  updateStats();
-  current = makeQuestion();
-  nextQ = makeQuestion();
-  preload(nextQ);
-  render();
+  /* ---------- 初期化(URLパラメータ ?r=&n=) ---------- */
+
+  buildStartUI();
+
+  var autoStart = false;
+  try {
+    var params = new URLSearchParams(location.search);
+    var r = params.get("r");
+    var n = params.get("n");
+    var validRegion = REGIONS.some(function (x) { return x.key === r; });
+    var validCount = n === "10" || n === "15";
+    if (validRegion) selRegion = r;
+    if (validCount) selCount = parseInt(n, 10);
+    autoStart = validRegion && validCount;
+  } catch (e) {}
+
+  if (autoStart) {
+    startRound();
+  } else {
+    showStart();
+  }
 })();
 </script>
 </body>
